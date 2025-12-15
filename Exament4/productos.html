@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Products (XMLHttpRequest)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e8e8e8;
+        }
+        form {
+            text-align: center;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 6px;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Listado de Products (XMLHttpRequest POST)</h2>
+
+<form id="filtros">
+    <input type="text" id="productName" placeholder="Product Name">
+    <input type="text" id="productLine" placeholder="Product Line">
+    <button type="button" id="btn-filtrar">Filtrar</button>
+    <button type="button" id="btn-todos">Mostrar Todos</button>
+</form>
+
+<div id="tabla-products"></div>
+
+<script>
+function cargarProductos(filtros = {}) {
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "filtrosproductos.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+    document.getElementById("tabla-products").innerHTML =
+        "<p style='text-align:center;color:blue;'>Cargando datos...</p>";
+
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) { 
+            if (xhr.status === 200) {
+                document.getElementById("tabla-products").innerHTML = xhr.responseText;
+            } else {
+                document.getElementById("tabla-products").innerHTML =
+                    "<p style='text-align:center;color:red;'>Error al cargar los datos.</p>";
+            }
+        }
+    };
+
+
+    const params = new URLSearchParams(filtros).toString();
+
+
+    xhr.send(params);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btnFiltrar = document.getElementById("btn-filtrar");
+    const btnTodos = document.getElementById("btn-todos");
+    const productName = document.getElementById("productName");
+    const productLine = document.getElementById("productLine");
+
+    btnFiltrar.addEventListener("click", () => {
+        const filtros = {
+            productName: productName.value,
+            productLine: productLine.value
+        };
+        cargarProductos(filtros);
+    });
+
+
+    btnTodos.addEventListener("click", () => {
+        productName.value = "";
+        productLine.value = "";
+        cargarProductos();
+    });
+
+    cargarProductos();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+#filter {
+  text-align: center;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 80%;
+  margin: 20px auto;
+  padding: 15px;
+}
+
+#filter form div {
+  margin: 8px;
+  display: inline-block;
+}
+
+#filter label {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-right: 6px;
+}
+
+#filter input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+table {
+  width: 90%;
+  margin: 25px auto;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #43a047;
+  color: white;
+  text-transform: uppercase;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #eafbea;
+}
+
+.error {
+  color: #c62828;
+  text-align: center;
+}

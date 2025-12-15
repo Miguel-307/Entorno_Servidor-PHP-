@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleados - Northwind</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+        th { background-color: #ddd; }
+        form {
+            text-align: center;
+            margin: 20px;
+        }
+        input {
+            margin: 0 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Listado de Empleados (Northwind)</h2>
+
+<form id="filtros">
+    <input type="text" id="title" placeholder="Título">
+    <input type="text" id="city" placeholder="Ciudad">
+    <input type="text" id="country" placeholder="País">
+</form>
+
+<div id="tabla-empleados"></div>
+
+<script>
+    // Función para enviar POST y actualizar la tabla
+    function cargarDatos() {
+        const title = document.getElementById("title").value;
+        const city = document.getElementById("city").value;
+        const country = document.getElementById("country").value;
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("city", city);
+        formData.append("country", country);
+
+        fetch("filtrar.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("tabla-empleados").innerHTML = data;
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
+    // Capturar eventos de escritura en cada input para autofiltrado
+    document.getElementById("title").addEventListener("input", cargarDatos);
+    document.getElementById("city").addEventListener("input", cargarDatos);
+    document.getElementById("country").addEventListener("input", cargarDatos);
+
+    // Carga inicial al abrir la página
+    cargarDatos();
+</script>
+
+</body>
+</html>

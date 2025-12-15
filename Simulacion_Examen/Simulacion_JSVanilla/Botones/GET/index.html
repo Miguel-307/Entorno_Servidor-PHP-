@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleados - Northwind</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+        th { background-color: #ddd; }
+        form {
+            text-align: center;
+            margin: 20px;
+        }
+        input, button {
+            margin: 0 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Listado de Empleados (Northwind)</h2>
+
+<form id="filtros">
+    <input type="text" name="title" id="title" placeholder="Título">
+    <input type="text" name="city" id="city" placeholder="Ciudad">
+    <input type="text" name="country" id="country" placeholder="País">
+    <button type="button" id="btn-filtrar">Filtrar</button>
+    <button type="button" id="btn-todos">Mostrar Todos</button>
+</form>
+
+<div id="tabla-empleados"></div>
+
+<script>
+    // Función para cargar datos usando GET
+    function cargarDatos() {
+        const title = encodeURIComponent(document.getElementById("title").value);
+        const city = encodeURIComponent(document.getElementById("city").value);
+        const country = encodeURIComponent(document.getElementById("country").value);
+
+        // Construir la URL con query string
+        const url = `filtrar.php?title=${title}&city=${city}&country=${country}`;
+
+        fetch(url)  // GET por defecto
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("tabla-empleados").innerHTML = data;
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    // Botón Filtrar
+    document.getElementById("btn-filtrar").addEventListener("click", function() {
+        cargarDatos(); // Aplica todos los filtros
+    });
+
+    // Botón Mostrar Todos
+    document.getElementById("btn-todos").addEventListener("click", function() {
+        document.getElementById("title").value = '';
+        document.getElementById("city").value = '';
+        document.getElementById("country").value = '';
+        cargarDatos(); // Carga todos los registros
+    });
+
+    // Carga inicial al abrir la página
+    cargarDatos();
+</script>
+
+</body>
+</html>

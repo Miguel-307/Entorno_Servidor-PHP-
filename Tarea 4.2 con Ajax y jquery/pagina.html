@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cuadrado de un número</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="funciones.js"></script>
+    <style>
+        body{
+            background-color: #25a4c4;
+        }
+        .Container {
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        input{
+            margin: 10px;
+            padding: 10px;
+        border: black 2px solid;
+        }
+        input[type="submit"]{
+            background-color: #a10b0b;
+            color: white;
+            cursor:pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="Container ">
+    <h2>Calcula el cuadrado de un número</h2>
+
+    <form id="formulario">
+        <input type="number" id="numero" name="numero" placeholder="Introduce un número">
+        <input type="submit" value="Calcular">
+    </form><br>
+
+    <div id="resultado"></div>
+    </div>
+</body>
+</html>
