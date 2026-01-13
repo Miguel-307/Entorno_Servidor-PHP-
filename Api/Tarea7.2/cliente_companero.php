@@ -1,38 +1,36 @@
 <?php
-$url_servicio = "http://localhost/apartado3_servicio.php"; 
+// URL DEL COMPAÑERO (Cambia localhost por la IP de tu compañero si estáis en red)
+$url = "http://localhost/Entorno_servidor/Api/Tarea7.2/apartado3_servicio.php";
 
-$datos_viaje = [
-    "distancia" => 500,  
-    "consumo" => 6.5,    
-    "precio" => 1.60     
+echo "--- PRUEBA 1: Enviando por POST (JSON) ---\n<br>";
+
+// Datos para pedir tu merienda favorita
+$datosPedido = [
+    "prod" => "Bocadillo de Salchichón",
+    "precio" => 4.50,
+    "dto" => 10 // 10% de descuento por cliente VIP
 ];
 
-$ch = curl_init($url_servicio);
-
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-curl_setopt($ch, CURLOPT_POST, true);           
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datos_viaje)); 
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
-    'Content-Length: ' . strlen(json_encode($datos_viaje))
-]);
-
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datosPedido));
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
 $respuesta = curl_exec($ch);
-
-
-if (curl_errno($ch)) {
-    echo 'Error en cURL: ' . curl_error($ch);
-} else {
-
-    $datos_respuesta = json_decode($respuesta, true);
-    
-    echo "--- RESPUESTA DEL SERVIDOR ---\n";
-    echo "Coste del viaje: " . $datos_respuesta['coste_total'] . "\n";
-    echo "Litros consumidos: " . $datos_respuesta['litros_totales'] . "\n";
-    echo "Método detectado por el servidor: " . $datos_respuesta['metodo_usado'] . "\n";
-}
-
-
 curl_close($ch);
+
+// Mostramos lo que respondió tu servidor
+$json = json_decode($respuesta, true);
+echo "Producto: " . $json['ticket']['producto'] . "<br>";
+echo "Precio Final: " . $json['ticket']['precio_final'] . " €<br>";
+echo "Método detectado: " . $json['metodo_usado'] . "<br><br>";
+
+
+echo "--- PRUEBA 2: Enviando por GET (URL) ---\n<br>";
+// Aquí probamos enviando datos simples en la URL
+$urlGet = $url . "?prod=Agua&precio=1.00&dto=0";
+$respuestaGet = file_get_contents($urlGet);
+
+echo "Respuesta cruda del servidor: " . $respuestaGet;
 ?>

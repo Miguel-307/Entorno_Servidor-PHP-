@@ -1,38 +1,28 @@
 <?php
 header('Content-Type: application/json');
+
+// 1. LEER EL JSON ENTRANTE (Esta es la clave del ejercicio)
+// php://input lee el cuerpo crudo de la petición
 $jsonRecibido = file_get_contents('php://input');
-$datos = json_decode($jsonRecibido, true);
 
+// 2. Convertir JSON a Array de PHP
+$data = json_decode($jsonRecibido, true);
 
-$num1 = $datos['num1'] ?? null;
-$num2 = $datos['num2'] ?? null;
-$operacion = $datos['operacion'] ?? null;
-
-
-if ($num1 === null || $num2 === null || $operacion === null) {
-    echo json_encode(["status" => "error", "mensaje" => "Faltan parámetros JSON"]);
+// Verificamos que llegaron los datos
+if (!isset($data['n1']) || !isset($data['n2'])) {
+    echo json_encode(["error" => "Faltan datos"]);
     exit;
 }
-$resultado = 0;
-switch ($operacion) {
-    case 'suma': $resultado = $num1 + $num2; break;
-    case 'resta': $resultado = $num1 - $num2; break;
-    case 'multi': $resultado = $num1 * $num2; break;
-    case 'div':
-    if ($num2 == 0) {
-            echo json_encode(["status" => "error", "mensaje" => "División por cero"]);
-            exit;
-    }
-        $resultado = $num1 / $num2;
-        break;
-    default:
-        echo json_encode(["status" => "error", "mensaje" => "Operación desconocida"]);
-        exit;
-}
 
-echo json_encode([
-    "status" => "success",
-    "metodo" => "POST (JSON)",
-    "resultado" => $resultado
-]);
+$n1 = $data['n1'];
+$n2 = $data['n2'];
+$op = $data['op'] ?? 'suma';
+$resultado = 0;
+
+// 3. Lógica (igual que antes)
+if ($op == 'suma') $resultado = $n1 + $n2;
+elseif ($op == 'resta') $resultado = $n1 - $n2;
+// ... puedes añadir más
+
+echo json_encode(["resultado" => $resultado]);
 ?>

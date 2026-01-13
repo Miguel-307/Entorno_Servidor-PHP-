@@ -1,44 +1,41 @@
 <?php
 header('Content-Type: application/json');
-$distancia = null; 
-$consumo = null;   
-$precio = null;    
 
+$precio = 0;
+$descuento = 0;
+$producto = "Producto desconocido";
 
+// DETECTAR EL MÉTODO
 $metodo = $_SERVER['REQUEST_METHOD'];
 
-if ($metodo === 'GET') {
+if ($metodo == 'GET') {
+    // Si es GET, leemos de la URL
+    $precio = $_GET['precio'] ?? 0;
+    $descuento = $_GET['dto'] ?? 0;
+    $producto = $_GET['prod'] ?? 'Bocadillo genérico';
 
-    $distancia = $_GET['distancia'] ?? null;
-    $consumo = $_GET['consumo'] ?? null;
-    $precio = $_GET['precio'] ?? null;
-
-} elseif ($metodo === 'POST') {
-
-    $json = file_get_contents('php://input');
-    $datos = json_decode($json, true);
+} elseif ($metodo == 'POST') {
+    // Si es POST, leemos el JSON del cuerpo
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
     
-    $distancia = $datos['distancia'] ?? null;
-    $consumo = $datos['consumo'] ?? null;
-    $precio = $datos['precio'] ?? null;
+    $precio = $data['precio'] ?? 0;
+    $descuento = $data['dto'] ?? 0;
+    $producto = $data['prod'] ?? 'Bocadillo genérico';
 }
 
+// CÁLCULO
+$precioFinal = $precio - ($precio * ($descuento / 100));
 
-if ($distancia && $consumo && $precio) {
-
-    $litrosNecesarios = ($distancia / 100) * $consumo;
-    $costeTotal = $litrosNecesarios * $precio;
-
-    echo json_encode([
-        "mensaje" => "Cálculo realizado con éxito",
-        "metodo_usado" => $metodo,
-        "litros_totales" => round($litrosNecesarios, 2) . " L",
-        "coste_total" => round($costeTotal, 2) . " €"
-    ]);
-} else {
-    echo json_encode([
-        "error" => "Datos incompletos",
-        "nota" => "Se requiere: distancia (km), consumo (l/100km) y precio (€/l)"
-    ]);
-}
+// RESPUESTA
+echo json_encode([
+    "mensaje" => "Cálculo realizado con éxito",
+    "ticket" => [
+        "producto" => $producto,
+        "precio_original" => $precio,
+        "descuento_aplicado" => $descuento . "%",
+        "precio_final" => $precioFinal
+    ],
+    "metodo_usado" => $metodo // Para que veas por dónde entró
+]);
 ?>
